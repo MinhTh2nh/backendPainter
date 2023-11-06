@@ -1,62 +1,53 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const mysql = require("mysql");
-require('dotenv').config();
-const configViewEngine = require('./config/viewEngine')
-const webRoutes = require('./routes/web')
-//app express
-//port
+const configViewEngine = require("./config/viewEngine");
+const webRoutes = require("./routes/web");
+const db = require("./config/database");
 
-const app = express(); 
-const port = process.env.PORT || 8888; 
-const hostname = process.env.HOST_NAME
+const app = express();
+const port = process.env.PORT || 8888;
+const hostname = process.env.HOST_NAME;
 
 app.use(cors());
 app.use(express.json());
 
-// const db = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '',
-//     database: 'painter',
-// });
-
-// db.connect((err) => {
-//     if (err) {
-//         console.error('MySQL connection failed: ' + err.message);
-//     } else {
-//         console.log('Connected to MySQL database');
-//     }
-// });
-
-//Config template engine
-configViewEngine(app)
-
-
-//Routes
-app.use('/v1', webRoutes)
-app.listen(port, hostname , () => {
-    console.log(` Server is running on ${port} `); 
+db.connect((err) => {
+  if (err) {
+    console.error("MySQL connection failed: " + err.message);
+  } else {
+    console.log("Connected to MySQL database");
+  }
 });
 
-// // Example route to check MySQL connection status
-// app.get('/check-connection', (req, res) => {
-//     if (db.state === 'authenticated') {
-//         res.json({ message: 'MySQL connection is established' });
-//     } else {
-//         res.json({ message: 'MySQL connection is not established' });
-//     }
-// });
+//Config template engine
+configViewEngine(app);
 
-// // Add a testing route to retrieve all data from the "signup" table
-// app.get('/users', (req, res) => {
-//     db.query('SELECT * FROM login', (err, results) => {
-//         if (err) {
-//             return res.status(500).json({ error: 'Database error' });
-//         }
-//         return res.status(200).json(results);
-//     });
-// });
+//Routes
+app.use("/v1", webRoutes);
+app.listen(port, hostname, () => {
+  console.log(` Server is running on ${port} `);
+});
+
+// Example route to check MySQL connection status
+app.get("/check-connection", (req, res) => {
+  if (db.state === "authenticated") {
+    res.json({ message: "MySQL connection is established" });
+  } else {
+    res.json({ message: "MySQL connection is not established" });
+  }
+});
+
+// Add a testing route to retrieve all data from the "signup" table
+app.get("/users", (req, res) => {
+  db.query("SELECT * FROM user", (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error" });
+    }
+    console.log(">>>>>results = ", results);
+    return res.status(200).json(results);
+  });
+});
 
 // app.post('/signup', (req, res) => {
 //     console.log('Received a POST request to /signup with data:', req.body);
@@ -89,7 +80,6 @@ app.listen(port, hostname , () => {
 //     });
 // });
 
-
 // app.get('/projects', (req, res) => {
 //     db.query('SELECT * FROM project', (err, results) => {
 //         if (err) {
@@ -101,7 +91,7 @@ app.listen(port, hostname , () => {
 
 // app.get('/projects/:projectId', (req, res) => {
 //     const projectId = req.params.projectId; // Get the projectId from the URL parameter
-    
+
 //     // Perform a database query to retrieve the project with the specified projectId
 //     db.query('SELECT * FROM project WHERE projectId = ?', [projectId], (err, results) => {
 //         if (err) {
@@ -157,7 +147,7 @@ app.listen(port, hostname , () => {
 //         // Insert the new user
 //         db.query('INSERT INTO project ( projectName, description, quantity , startDate , endDate , address , abilityList , status ) VALUES (?, ?, ? , ?, ?, ?, ? , ?)', [projectName, description, quantity, startDate, endDate, address, abilityList , status], (err, data) => {
 //             if (err) {
-//                 console.error(err); 
+//                 console.error(err);
 //                 return res.status(500).json({ error: 'Database error' });
 //             }
 //             // After successful insertion, redirect to retrieve all user data
