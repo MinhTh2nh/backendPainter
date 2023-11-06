@@ -22,8 +22,6 @@ db.connect((err) => {
 
 //Config template engine
 configViewEngine(app);
-
-
 //Routes : Dinh dang version webRoutes 
 app.use("/", webRoutes);
 
@@ -38,6 +36,10 @@ app.get("/check-connection", (req, res) => {
   } else {
     res.json({ message: "MySQL connection is not established" });
   }
+});
+
+app.listen(port, hostname, () => {
+  console.log(` Server is running on ${port} `);
 });
 
 // app.get('/projects', (req, res) => {
