@@ -23,8 +23,10 @@ db.connect((err) => {
 //Config template engine
 configViewEngine(app);
 
-//Routes
-app.use("/v1", webRoutes);
+
+//Routes : Dinh dang version webRoutes 
+app.use("/", webRoutes);
+
 app.listen(port, hostname, () => {
   console.log(` Server is running on ${port} `);
 });
@@ -37,48 +39,6 @@ app.get("/check-connection", (req, res) => {
     res.json({ message: "MySQL connection is not established" });
   }
 });
-
-// Add a testing route to retrieve all data from the "signup" table
-app.get("/users", (req, res) => {
-  db.query("SELECT * FROM user", (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Database error" });
-    }
-    console.log(">>>>>results = ", results);
-    return res.status(200).json(results);
-  });
-});
-
-// app.post('/signup', (req, res) => {
-//     console.log('Received a POST request to /signup with data:', req.body);
-//     // Validate inputs
-//     const { name, email, password, role } = req.body;
-//     if (!name || !email || !password) {
-//         return res.status(400).json({ error: 'Name, email, and password are required' });
-//     }
-//     // Check if the email already exists
-//     db.query('SELECT * FROM login WHERE email = ?', [email], (err, results) => {
-//         if (err) {
-//             return res.status(500).json({ error: 'Database error' });
-//         }
-//         if (results.length > 0) {
-//             return res.status(400).json({ error: 'Email already in use' });
-//         }
-//         // Insert the new user
-//         db.query('INSERT INTO login (name, email, password, role) VALUES (?, ?, ?, ?)', [name, email, password, role], (err, data) => {
-//             if (err) {
-//                 return res.status(500).json({ error: 'Database error' });
-//             }
-//             // After successful insertion, redirect to retrieve all user data
-//             db.query('SELECT * FROM login', (err, results) => {
-//                 if (err) {
-//                     return res.status(500).json({ error: 'Database error' });
-//                 }
-//                 return res.status(201).json({ message: 'User registration successful', users: results });
-//             });
-//         });
-//     });
-// });
 
 // app.get('/projects', (req, res) => {
 //     db.query('SELECT * FROM project', (err, results) => {
