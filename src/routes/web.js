@@ -1,3 +1,4 @@
+// routes/web.js
 const express = require("express");
 const router = express.Router();
 const db = require("../config/database");
@@ -107,9 +108,7 @@ const {
     createUser,
     getUser
 } = require('../controllers/homeController')
-router.get('/', function (req, res) {
-    return res.status(200).json(results);
-});
+// router.get( '/' , getHomePage )
 router.get('/users', (req, res) => {
     let users = [];
     db.query("SELECT * FROM user", (err, results) => {
@@ -171,10 +170,11 @@ router.delete('/users/:user_id', (req, res) => {
 });
 
 router.post( '/create-user' , createUser )
+
 router.get('/abc' , getABC )
-router.post( '/create-user' , createUser )
-router.get('/abc' , getABC )
-router.get('/users' , getUser )
+router.get('/', function (req, res) {
+    return res.status(200).json(results);
+});
 
 
 module.exports = router; 
