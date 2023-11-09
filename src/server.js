@@ -1,6 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+
+
 const configViewEngine = require("./config/viewEngine");
 const webRoutes = require("./routes/web");
 const db = require("./config/database");
@@ -11,6 +15,10 @@ const hostname = process.env.HOST_NAME;
 
 app.use(cors());
 app.use(express.json());
+//Config template engine
+configViewEngine(app);
+//Routes : Dinh dang version webRoutes 
+app.use("/", webRoutes);
 
 db.connect((err) => {
   if (err) {
@@ -20,16 +28,30 @@ db.connect((err) => {
   }
 });
 
-//Config template engine
-configViewEngine(app);
 
-//Routes : Dinh dang version webRoutes 
-app.use("/", webRoutes);
+// app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Library API",
+      version: "1.0.0",
+      description: "A simple Express Library API",
+    },
+    servers: [
+      {
+        url: `http://localhost:${port}`,
+      },
+    ],
+  },
+  apis: [`${__dirname}/routes/*.js`]
+};
+const specs = swaggerJsDoc(options);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.listen(port, hostname, () => {
   console.log(` Server is running on ${port} `);
 });
-
 // Example route to check MySQL connection status
 app.get("/check-connection", (req, res) => {
   if (db.state === "authenticated") {
@@ -38,8 +60,3 @@ app.get("/check-connection", (req, res) => {
     res.json({ message: "MySQL connection is not established" });
   }
 });
-
-
-
-
-
