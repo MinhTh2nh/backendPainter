@@ -7,11 +7,9 @@ const router = express.Router()
 
 // router.Method('/route' , handler    )
 router.get( '/' , getHomePage )
-
-router.get('/users' , getUser )
 router.post( '/create-user' , createUser )
-
 router.get('/abc' , getABC )
+router.get('/users' , getUser )
 
 
 module.exports = router; // export default
