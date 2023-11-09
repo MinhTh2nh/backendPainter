@@ -8,19 +8,11 @@ const router = express.Router()
 // router.Method('/route' , handler    )
 router.get( '/' , getHomePage )
 
-router.post( '/create-user' , createUser )
-router.get('/abc' , getABC )
 router.get('/users' , getUser )
+router.post( '/create-user' , createUser )
 
-// app.get("/users", (req, res) => {
-//     db.query("SELECT * FROM user", (err, results) => {
-//       if (err) {
-//         return res.status(500).json({ error: "Database error" });
-//       }
-//       console.log(">>>>>results = ", results);
-//       return res.status(200).json(results);
-//     });
-//   });
+router.get('/abc' , getABC )
+
 
 module.exports = router; // export default
 
