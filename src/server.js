@@ -49,9 +49,10 @@ const options = {
 const specs = swaggerJsDoc(options);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
-app.listen(port, hostname, () => {
-  console.log(` Server is running on ${port} `);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on port ${port}`);
 });
+
 // Example route to check MySQL connection status
 app.get("/check-connection", (req, res) => {
   if (db.state === "authenticated") {
