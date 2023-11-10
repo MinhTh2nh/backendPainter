@@ -12,27 +12,6 @@ const {
 
 /**
  * @swagger
- * tags:
- *   name: user
- *   description: Operations related to users
- */
-
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Get data.
- *     tags: [user]
- *     responses:
- *       200:
- *         description: Data retrieved successfully.
- */
-router.get('/', function (req, res) {
-    return res.status(200).json({ message: 'Data retrieved successfully' });
-});
-
-/**
- * @swagger
  * /users:
  *   get:
  *     summary: Retrieve a list of users.
@@ -46,96 +25,17 @@ router.get('/', function (req, res) {
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/user'
- *   post:
- *     summary: Create a new user
- *     tags: [users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/user'
- *     responses:
- *       200:
- *         description: The created user.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *       500:
- *         description: Some server error
- * /users/{id}:
- *   get:
- *     summary: Get the user by id
- *     tags: [users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The user id
- *     responses:
- *       200:
- *         description: The user response by id
- *         contents:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *       404:
- *         description: The user was not found
- *   put:
- *    summary: Update the user by the id
- *    tags: [users]
- *    parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: string
- *        required: true
- *        description: The user id
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/user'
- *    responses:
- *      200:
- *        description: The user was updated
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/user'
- *      404:
- *        description: The user was not found
- *      500:
- *        description: Some error happened
- *   delete:
- *     summary: Remove the user by id
- *     tags: [users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The user id
- *
- *     responses:
- *       200:
- *         description: The user was deleted
- *       404:
- *         description: The user was not found
+ *                 type: object
+ *                 properties:
+ *                   user_id:
+ *                     type: integer
+ *                     description: The user ID.
+ *                     example: 0
+ *                   email:
+ *                     type: string
+ *                     description: The user's email.
+ *                     example: minhthanh123@gmail.com
  */
-const {
-    getHomePage,
-    getABC,
-    createUser,
-    getUser
-} = require('../controllers/homeController')
-// router.get( '/' , getHomePage )
 router.get('/users', (req, res) => {
     let users = [];
     db.query("SELECT * FROM user", (err, results) => {
@@ -151,6 +51,37 @@ router.get('/users', (req, res) => {
     });
 })
 
+/**
+ * @swagger
+ * /users/{user_id}:
+ *   get:
+ *     summary: Retrieve a user by ID.
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID.
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: A single user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user_id:
+ *                   type: integer
+ *                   description: The user ID.
+ *                   example: 0
+ *                 email:
+ *                   type: string
+ *                   description: The user's email.
+ *                   example: minhthanh123@gmail.com
+ */
+
 router.get('/users/:user_id', (req, res) => {
     const { user_id } = req.params; // Extracting user_id from the request parameters
     let users = [];
@@ -165,6 +96,36 @@ router.get('/users/:user_id', (req, res) => {
         res.send(JSON.stringify(users));
     });
 });
+
+/**
+ * @swagger
+ * /users/{user_id}:
+ *   put:
+ *     summary: Update a user by ID.
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID.
+ *     requestBody:
+ *       description: Updated user data.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email.
+ *                 example: updated_email@gmail.com
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: User updated successfully.
+ */
 
 router.put('/users/:user_id', (req, res) => {
     const { user_id } = req.params; // Extracting user_id from the request parameters
@@ -183,6 +144,25 @@ router.put('/users/:user_id', (req, res) => {
         }
     );
 });
+
+/**
+ * @swagger
+ * /users/{user_id}:
+ *   delete:
+ *     summary: Delete a user by ID.
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID.
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: User deleted successfully.
+ */
+
 router.delete('/users/:user_id', (req, res) => {
     const { user_id } = req.params; // Extracting user_id from the request parameters
 
@@ -195,6 +175,29 @@ router.delete('/users/:user_id', (req, res) => {
         res.json({ message: "User deleted successfully" });
     });
 });
+
+/**
+ * @swagger
+ * /create-user:
+ *   post:
+ *     summary: Create a new user.
+ *     requestBody:
+ *       description: User data to create.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email.
+ *                 example: minhthanh123@gmail.com
+ *     tags: [user]
+ *     responses:
+ *       201:
+ *         description: User created successfully.
+ */
 
 router.post( '/create-user' , createUser )
 
