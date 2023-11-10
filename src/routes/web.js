@@ -59,7 +59,18 @@ router.get('/', function (req, res) {
  */
 
 router.get('/users', (req, res) => {
-    // Your existing code here
+    let users = [];
+    db.query("SELECT * FROM user", (err, results) => {
+        if (err) {
+            return res.status(500).json({
+                error: "Database error"
+            });
+        }
+        users = results;
+        // console.log(">>>>>check users= ", users);
+        res.send(JSON.stringify(users))
+        // return res.status(200).json(results);
+    });
 });
 
 /**
@@ -94,7 +105,18 @@ router.get('/users', (req, res) => {
  */
 
 router.get('/users/:user_id', (req, res) => {
-    // Your existing code here
+    const { user_id } = req.params; // Extracting user_id from the request parameters
+    let users = [];
+    
+    db.query(`SELECT * FROM user WHERE user_id = ${user_id}`, (err, results) => {
+        if (err) {
+            return res.status(500).json({
+                error: "Database error"
+            });
+        }
+        users = results;
+        res.send(JSON.stringify(users));
+    });
 });
 
 /**
@@ -128,7 +150,21 @@ router.get('/users/:user_id', (req, res) => {
  */
 
 router.put('/users/:user_id', (req, res) => {
-    // Your existing code here
+    const { user_id } = req.params; // Extracting user_id from the request parameters
+    const updatedUserData = req.body; // Assuming the updated user data is sent in the request body
+
+    db.query(
+        `UPDATE user SET ? WHERE user_id = ${user_id}`,
+        updatedUserData,
+        (err, results) => {
+            if (err) {
+                return res.status(500).json({
+                    error: "Database error"
+                });
+            }
+            res.json({ message: "User updated successfully" });
+        }
+    );
 });
 
 /**
@@ -150,7 +186,16 @@ router.put('/users/:user_id', (req, res) => {
  */
 
 router.delete('/users/:user_id', (req, res) => {
-    // Your existing code here
+    const { user_id } = req.params; // Extracting user_id from the request parameters
+
+    db.query(`DELETE FROM user WHERE user_id = ${user_id}`, (err, results) => {
+        if (err) {
+            return res.status(500).json({
+                error: "Database error"
+            });
+        }
+        res.json({ message: "User deleted successfully" });
+    });
 });
 
 /**
