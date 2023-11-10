@@ -11,7 +11,7 @@ const db = require("./config/database");
 const app = express();
 const port = process.env.PORT || 8888;
 const hostname = process.env.HOST_NAME;
-
+const path = "https://backendpainter-v1.onrender.com/" 
 app.use(cors());
 app.use(express.json());
 
