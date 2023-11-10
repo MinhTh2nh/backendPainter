@@ -129,12 +129,6 @@ router.get('/', function (req, res) {
  *       404:
  *         description: The user was not found
  */
-const {
-    getHomePage,
-    getABC,
-    createUser,
-    getUser
-} = require('../controllers/homeController')
 // router.get( '/' , getHomePage )
 router.get('/users', (req, res) => {
     let users = [];
