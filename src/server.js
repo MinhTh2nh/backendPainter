@@ -11,7 +11,8 @@ const db = require("./config/database");
 const app = express();
 const port = process.env.PORT || 8888;
 const hostname = process.env.HOST_NAME;
-const path = "https://backendpainter-v1.onrender.com/" 
+const path = process.env.SWAGGER_URL || `http://localhost:${port}`;
+
 app.use(cors());
 app.use(express.json());
 
@@ -40,7 +41,7 @@ const options = {
     },
     servers: [
       {
-        url: port === 8081 ? `http://localhost:${port}` : `${path}:${port}`,
+        url: path,
       },
     ],
   },
