@@ -40,7 +40,7 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${port}` || `${path}:${port}`,
+        url: port === 8081 ? `http://localhost:${port}` : `${path}:${port}`,
       },
     ],
   },
