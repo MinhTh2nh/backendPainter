@@ -4,7 +4,6 @@ const cors = require("cors");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
 
-
 const configViewEngine = require("./config/viewEngine");
 const webRoutes = require("./routes/web");
 const db = require("./config/database");
@@ -15,9 +14,11 @@ const hostname = process.env.HOST_NAME;
 
 app.use(cors());
 app.use(express.json());
-//Config template engine
+
+// Config template engine
 configViewEngine(app);
-//Routes : Dinh dang version webRoutes 
+
+// Routes: Define the version and use webRoutes
 app.use("/", webRoutes);
 
 db.connect((err) => {
@@ -28,8 +29,7 @@ db.connect((err) => {
   }
 });
 
-
-// app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+// Swagger options
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -44,7 +44,8 @@ const options = {
       },
     ],
   },
-  apis: [`${__dirname}/routes/*.js`]
+  // Specify the path to your route files with Swagger annotations
+  apis: [`${__dirname}/routes/*.js`],
 };
 const specs = swaggerJsDoc(options);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));

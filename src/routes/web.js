@@ -2,179 +2,180 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config/database");
-/**
- * @swagger
- * tags:
- *   name: users
- *   description: The users managing API
- * /users:
- *   get:
- *     summary: Lists all the users
- *     tags: [users]
- *     responses:
- *       200:
- *         description: The list of the users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/user'
- *   post:
- *     summary: Create a new user
- *     tags: [users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/user'
- *     responses:
- *       200:
- *         description: The created user.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *       500:
- *         description: Some server error
- * /users/{id}:
- *   get:
- *     summary: Get the user by id
- *     tags: [users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The user id
- *     responses:
- *       200:
- *         description: The user response by id
- *         contents:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *       404:
- *         description: The user was not found
- *   put:
- *    summary: Update the user by the id
- *    tags: [users]
- *    parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: string
- *        required: true
- *        description: The user id
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/user'
- *    responses:
- *      200:
- *        description: The user was updated
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/user'
- *      404:
- *        description: The user was not found
- *      500:
- *        description: Some error happened
- *   delete:
- *     summary: Remove the user by id
- *     tags: [users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The user id
- *
- *     responses:
- *       200:
- *         description: The user was deleted
- *       404:
- *         description: The user was not found
- */
+
 const {
     getHomePage,
     getABC,
     createUser,
     getUser
 } = require('../controllers/homeController')
-// router.get( '/' , getHomePage )
+
+/**
+ * @swagger
+ * tags:
+ *   name: user
+ *   description: Operations related to users
+ */
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Get data.
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: Data retrieved successfully.
+ */
+router.get('/', function (req, res) {
+    return res.status(200).json({ message: 'Data retrieved successfully' });
+});
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Retrieve a list of users.
+ *     description: Retrieve a list of users from the database.
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: A list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   user_id:
+ *                     type: integer
+ *                     description: The user ID.
+ *                     example: 0
+ *                   email:
+ *                     type: string
+ *                     description: The user's email.
+ *                     example: minhthanh123@gmail.com
+ */
+
 router.get('/users', (req, res) => {
-    let users = [];
-    db.query("SELECT * FROM user", (err, results) => {
-        if (err) {
-            return res.status(500).json({
-                error: "Database error"
-            });
-        }
-        users = results;
-        // console.log(">>>>>check users= ", users);
-        res.send(JSON.stringify(users))
-        // return res.status(200).json(results);
-    });
-})
+    // Your existing code here
+});
+
+/**
+ * @swagger
+ * /users/{user_id}:
+ *   get:
+ *     summary: Retrieve a user by ID.
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID.
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: A single user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user_id:
+ *                   type: integer
+ *                   description: The user ID.
+ *                   example: 0
+ *                 email:
+ *                   type: string
+ *                   description: The user's email.
+ *                   example: minhthanh123@gmail.com
+ */
 
 router.get('/users/:user_id', (req, res) => {
-    const { user_id } = req.params; // Extracting user_id from the request parameters
-    let users = [];
-    
-    db.query(`SELECT * FROM user WHERE user_id = ${user_id}`, (err, results) => {
-        if (err) {
-            return res.status(500).json({
-                error: "Database error"
-            });
-        }
-        users = results;
-        res.send(JSON.stringify(users));
-    });
+    // Your existing code here
 });
+
+/**
+ * @swagger
+ * /users/{user_id}:
+ *   put:
+ *     summary: Update a user by ID.
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID.
+ *     requestBody:
+ *       description: Updated user data.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email.
+ *                 example: updated_email@gmail.com
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: User updated successfully.
+ */
 
 router.put('/users/:user_id', (req, res) => {
-    const { user_id } = req.params; // Extracting user_id from the request parameters
-    const updatedUserData = req.body; // Assuming the updated user data is sent in the request body
-
-    db.query(
-        `UPDATE user SET ? WHERE user_id = ${user_id}`,
-        updatedUserData,
-        (err, results) => {
-            if (err) {
-                return res.status(500).json({
-                    error: "Database error"
-                });
-            }
-            res.json({ message: "User updated successfully" });
-        }
-    );
+    // Your existing code here
 });
+
+/**
+ * @swagger
+ * /users/{user_id}:
+ *   delete:
+ *     summary: Delete a user by ID.
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID.
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: User deleted successfully.
+ */
+
 router.delete('/users/:user_id', (req, res) => {
-    const { user_id } = req.params; // Extracting user_id from the request parameters
-
-    db.query(`DELETE FROM user WHERE user_id = ${user_id}`, (err, results) => {
-        if (err) {
-            return res.status(500).json({
-                error: "Database error"
-            });
-        }
-        res.json({ message: "User deleted successfully" });
-    });
+    // Your existing code here
 });
 
-router.post( '/create-user' , createUser )
+/**
+ * @swagger
+ * /create-user:
+ *   post:
+ *     summary: Create a new user.
+ *     requestBody:
+ *       description: User data to create.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email.
+ *                 example: minhthanh123@gmail.com
+ *     tags: [user]
+ *     responses:
+ *       201:
+ *         description: User created successfully.
+ */
 
-router.get('/abc' , getABC )
-router.get('/', function (req, res) {
-    return res.status(200).json(results);
-});
+router.post('/create-user', createUser);
 
-
-module.exports = router; 
+module.exports = router;
