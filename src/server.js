@@ -7,6 +7,8 @@ const swaggerUI = require("swagger-ui-express");
 
 const configViewEngine = require("./config/viewEngine");
 const webRoutes = require("./routes/web");
+const imgRoutes = require("./routes/imageManager");
+
 const db = require("./config/database");
 
 const app = express();
@@ -22,6 +24,7 @@ configViewEngine(app);
 
 // Routes: Define the version and use webRoutes
 app.use("/", webRoutes);
+app.use("/", imgRoutes);
 
 db.connect((err) => {
   if (err) {
