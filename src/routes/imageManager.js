@@ -3,9 +3,6 @@ const imageController = require("../controllers/imageController")
 
 const express = require("express");
 const router = express.Router();
-const db = require("../config/database");
-const multer = require("multer");
-const path = require("path");
 
 
 router.post('/saveimages', imageController.upload.single('file'), imageController.addImage);
