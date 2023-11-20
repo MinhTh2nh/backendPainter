@@ -6,7 +6,6 @@ const db = require("../config/database");
 const {
     getHomePage,
     getABC,
-    createUser,
     getUser
 } = require('../controllers/homeController')
 
@@ -176,35 +175,7 @@ router.delete('/users/:user_id', (req, res) => {
     });
 });
 
-/**
- * @swagger
- * /create-user:
- *   post:
- *     summary: Create a new user.
- *     requestBody:
- *       description: User data to create.
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: The user's email.
- *                 example: minhthanh123@gmail.com
- *     tags: [user]
- *     responses:
- *       201:
- *         description: User created successfully.
- */
-
-router.post( '/create-user' , createUser )
-
-router.get('/abc' , getABC )
-router.get('/', function (req, res) {
-    return res.status(200).json(results);
-});
-
+router.get('/abc', getABC);
+router.get('/', getHomePage);
 
 module.exports = router; 
