@@ -2,7 +2,6 @@ const db = require("../config/database");
 const fs = require('fs');
 // image Upload
 const multer = require("multer");
-const path = require("path");
 const express = require("express");
 const model = require('../model/imageModel')
 
