@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const login = async (req, res, next) => {
   const email = req.body.email;
-  const password = req.query.password;
+  const password = req.body.password;
   // Replace 'users' with your actual table name
   const sql = `SELECT * FROM user WHERE email = ? and password = ?`;
   db.query(sql, [email, password], (err, result) => {

@@ -15,8 +15,4 @@ router.get(
 );
 router.put("/updateImage/:user_id/:imageID",imageController.updateImageByUserIDAndImageID);
 
-// router.put("./editImage", imageController.editImage);
-
-// router.get('/userimages/:user_id', imageController.getImagesByUserId);
-
 module.exports = router; 

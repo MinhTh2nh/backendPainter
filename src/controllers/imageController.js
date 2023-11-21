@@ -74,18 +74,6 @@ const deleteAllImages = async (req, res) => {
       .json({ Status: "Success", message: "All images deleted successfully" });
   });
 };
-// 3. get single product
-const getOneImage = async (req, res) => {
-  let imageID = req.params.imageID;
-  let image = await Image.findOne({ where: { imageID: imageID } });
-  res.status(200).send(image);
-};
-// 4. update Product
-const updateImage = async (req, res) => {
-  let imageID = req.params.imageID;
-  const image = await Image.update(req.body, { where: { imageID: imageID } });
-  res.status(200).send(image);
-};
 
 const getImageByUserIDAndImageID = async (req, res) => {
   try {
@@ -148,8 +136,6 @@ module.exports = {
   addImage,
   getAllImages,
   getImagesByUserId,
-  getOneImage,
-  updateImage,
   deleteAllImages,
   upload, // Assuming multerConfig is the Multer configuration
   getImageByUserIDAndImageID,
