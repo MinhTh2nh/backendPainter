@@ -1,15 +1,16 @@
 // controllers/AuthController.js
 const db = require("../config/database");
 const UsersModel = require("../model/User");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validateRegisterInput = require("../validator/RegisterValidator");
 require("dotenv").config();
 
 const login = async (req, res, next) => {
   const email = req.body.email;
-  const password = req.query.password;
+  const password = req.body.password;
   // Replace 'users' with your actual table name
-  const sql = `SELECT * FROM user WHERE email = ? and password = ?`;
+  const sql = `SELECT * FROM user WHERE email = ?`;
   db.query(sql, [email, password], (err, result) => {
     if (err) {
       return res.status(500).json({
@@ -26,7 +27,7 @@ const login = async (req, res, next) => {
     }
     const user = result[0];
     // Validate password
-    if (bcrypt.compareSync(req.body.password, user.password)) {
+    if (password === user.password) {
       // Make payload for token
       const payload = {
         user_id: user.user_id,
@@ -59,7 +60,7 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   let obj = {
     email: req.body.email,
-    phoneNumber: req.body.phoneNumber,
+    password: req.body.password,
     role: "user",
   };
 
