@@ -2,6 +2,7 @@ const db = require("../config/database");
 const fs = require("fs");
 // image Upload
 const multer = require("multer");
+const path = require("path");
 const express = require("express");
 // const model = require("../model/imageModel");
 const { Image } = require("../model/imageModel");
@@ -74,70 +75,56 @@ const deleteAllImages = async (req, res) => {
       .json({ Status: "Success", message: "All images deleted successfully" });
   });
 };
-
-const getImageByUserIDAndImageID = async (req, res) => {
+// 4. update Product
+const updateImage = async (req, res) => {
   try {
-    const user_id = req.params.user_id;
-    const image_id = req.params.imageID;
+    const imageID = req.params.imageID;
+    const { image_data } = req.body;
 
-    const selectQuery = "SELECT * FROM image WHERE user_id = ? AND imageID = ?";
-    const values = [user_id, image_id];
-
-    db.query(selectQuery, values, (err, result) => {
+    const sql = "UPDATE image SET image_data = ? , dateImage = NOW() WHERE imageID = ?";
+    const values = [image_data, imageID];
+    
+    db.query(sql, values, (err, result) => {
       if (err) {
-        return res.status(500).json({ Error: "Error fetching image" });
+        console.error(err);
+        return res.status(500).json({ error: "Internal server error" });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Image not found" });
       }
 
-      if (result.length === 0) {
-        return res.status(404).json({ Error: "Image not found" });
-      }
-
-      res.status(200).json({ Status: "Success", image: result[0] });
-    });
-  } catch (error) {
-    console.error("Error fetching image:", error);
-    return res
-      .status(500)
-      .json({ Error: "Internal server error", Details: error.message });
-  }
-};
-
-const updateImageByUserIDAndImageID = async (req, res) => {
-  try {
-    const user_id = req.params.user_id;
-    const image_id = req.params.imageID;
-    const { imageData } = req.body;
-
-    const updateQuery =
-      "UPDATE image SET image_data = ?, dateImage = NOW() WHERE user_id = ? AND imageID = ?";
-    const values = [imageData, user_id, image_id];
-
-    db.query(updateQuery, values, (err, result) => {
-      if (err) {
-        console.error("Error updating image:", err);
-        return res.status(500).json({ Error: "Internal server error" });
-      }
-
-      res
+      return res
         .status(200)
-        .json({ Status: "Success", UpdatedRows: result.affectedRows });
+        .json({ status: "Success", message: "Image updated successfully" });
     });
   } catch (error) {
-    console.error("Error updating image:", error);
-    return res
-      .status(500)
-      .json({ Error: "Internal server error", Details: error.message });
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
+//5. get image by imageID
+const getImagesByImageId = async (req, res) => {
+  const imageID = req.params.imageID; // Assuming imageID is in the URL parameters
+  const sql = "SELECT * FROM image WHERE imageID = ?";
+  const values = [imageID];
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ Error: "Error fetching images by image ID" });
+    }
+    return res.status(200).json({ Status: "Success", images: result });
+  });
+};
 
 
 module.exports = {
   addImage,
   getAllImages,
   getImagesByUserId,
+  updateImage,
   deleteAllImages,
   upload, // Assuming multerConfig is the Multer configuration
-  getImageByUserIDAndImageID,
-  updateImageByUserIDAndImageID,
+  getImagesByImageId,
 };
