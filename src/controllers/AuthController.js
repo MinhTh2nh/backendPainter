@@ -56,7 +56,6 @@ const login = async (req, res, next) => {
   });
 };
 
-
 const register = async (req, res, next) => {
   let obj = {
     email: req.body.email,

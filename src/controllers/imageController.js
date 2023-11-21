@@ -40,15 +40,15 @@ const addImage = async (req, res) => {
   });
 };
 
-const getImagesByUserId = async (req, res) => {
-  const user_id = req.params.user_id; // Assuming user_id is in the URL parameters
-  const sql = "SELECT * FROM image WHERE user_id = ?";
-  const values = [user_id];
+const getImagesByUserEmail = async (req, res) => {
+  const email = req.params.email; // Assuming email is in the URL parameters
+  const sql = "SELECT * FROM image WHERE email = ?";
+  const values = [email];
   db.query(sql, values, (err, result) => {
     if (err) {
       return res
         .status(500)
-        .json({ Error: "Error fetching images by user ID" });
+        .json({ Error: "Error fetching images by email" });
     }
     return res.status(200).json({ Status: "Success", images: result });
   });
@@ -83,12 +83,13 @@ const updateImage = async (req, res) => {
 
     const sql = "UPDATE image SET image_data = ? , dateImage = NOW() WHERE imageID = ?";
     const values = [image_data, imageID];
-    
+
     db.query(sql, values, (err, result) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: "Internal server error" });
       }
+
       if (result.affectedRows === 0) {
         return res.status(404).json({ error: "Image not found" });
       }
@@ -102,6 +103,7 @@ const updateImage = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 //5. get image by imageID
 const getImagesByImageId = async (req, res) => {
@@ -122,7 +124,7 @@ const getImagesByImageId = async (req, res) => {
 module.exports = {
   addImage,
   getAllImages,
-  getImagesByUserId,
+  getImagesByUserEmail,
   updateImage,
   deleteAllImages,
   upload, // Assuming multerConfig is the Multer configuration
