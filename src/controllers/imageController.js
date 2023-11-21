@@ -88,15 +88,15 @@ const updateImage = async (req, res) => {
   res.status(200).send(image);
 };
 
-const getImageByUserIdAndImageId = async (req, res) => {
+const getImageByUserIDAndImageID = async (req, res) => {
   try {
     const user_id = req.params.user_id;
     const image_id = req.params.imageID;
 
-    const sql = "SELECT * FROM image WHERE user_id = ? AND imageID = ?";
+    const selectQuery = "SELECT * FROM image WHERE user_id = ? AND imageID = ?";
     const values = [user_id, image_id];
 
-    db.query(sql, values, async (err, result) => {
+    db.query(selectQuery, values, (err, result) => {
       if (err) {
         return res.status(500).json({ Error: "Error fetching image" });
       }
@@ -105,9 +105,7 @@ const getImageByUserIdAndImageId = async (req, res) => {
         return res.status(404).json({ Error: "Image not found" });
       }
 
-    //   const image = result[0];
-    //   const imageData = Buffer.from(image.image_data, "base64");
-      res.status(200).json({ Status: "Success", image: result });
+      res.status(200).json({ Status: "Success", image: result[0] });
     });
   } catch (error) {
     console.error("Error fetching image:", error);
@@ -117,6 +115,36 @@ const getImageByUserIdAndImageId = async (req, res) => {
   }
 };
 
+const updateImageByUserIDAndImageID = async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const image_id = req.params.imageID;
+    const { imageData } = req.body;
+
+    const updateQuery =
+      "UPDATE image SET image_data = ?, dateImage = NOW() WHERE user_id = ? AND imageID = ?";
+    const values = [imageData, user_id, image_id];
+
+    db.query(updateQuery, values, (err, result) => {
+      if (err) {
+        console.error("Error updating image:", err);
+        return res.status(500).json({ Error: "Internal server error" });
+      }
+
+      res
+        .status(200)
+        .json({ Status: "Success", UpdatedRows: result.affectedRows });
+    });
+  } catch (error) {
+    console.error("Error updating image:", error);
+    return res
+      .status(500)
+      .json({ Error: "Internal server error", Details: error.message });
+  }
+};
+
+
+
 module.exports = {
   addImage,
   getAllImages,
@@ -125,5 +153,6 @@ module.exports = {
   updateImage,
   deleteAllImages,
   upload, // Assuming multerConfig is the Multer configuration
-  getImageByUserIdAndImageId,
+  getImageByUserIDAndImageID,
+  updateImageByUserIDAndImageID,
 };

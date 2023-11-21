@@ -9,10 +9,11 @@ router.post('/saveimages', imageController.upload.single('file'), imageControlle
 router.get('/userimage/:user_id', imageController.getImagesByUserId);
 router.get('/getAllImages',imageController.getAllImages);
 router.delete('/deleteAllImages',imageController.deleteAllImages);
-router.put(
+router.get(
   "/getImage/:user_id/:imageID",
-  imageController.getImageByUserIdAndImageId
+  imageController.getImageByUserIDAndImageID
 );
+router.put("/updateImage/:user_id/:imageID",imageController.updateImageByUserIDAndImageID);
 
 // router.put("./editImage", imageController.editImage);
 
