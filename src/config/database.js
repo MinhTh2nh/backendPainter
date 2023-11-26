@@ -9,4 +9,4 @@ const db = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-module.exports = db;
+module.exports = db; // Export the promise-based pool

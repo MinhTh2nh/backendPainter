@@ -25,6 +25,10 @@ configViewEngine(app);
 // Routes: Define the version and use webRoutes
 app.use("/", webRoutes);
 app.use("/", imgRoutes);
+<<<<<<< HEAD
+=======
+app.use("/", authRoutes);
+>>>>>>> origin/thanhnew
 
 db.connect((err) => {
   if (err) {

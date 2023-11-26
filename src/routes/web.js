@@ -163,8 +163,14 @@ router.put("/users/:user_id", (req, res) => {
  *         description: User deleted successfully.
  */
 
+<<<<<<< HEAD
 router.delete("/users/:user_id", (req, res) => {
   const { user_id } = req.params; // Extracting user_id from the request parameters
+=======
+router.delete('/users/:user_id', (req, res) => {
+    const { user_id } = req.params; 
+    // Extracting user_id from the request parameters
+>>>>>>> origin/thanhnew
 
   db.query(`DELETE FROM user WHERE user_id = ${user_id}`, (err, results) => {
     if (err) {
@@ -176,6 +182,7 @@ router.delete("/users/:user_id", (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 /**
  * @swagger
  * /create-user:
@@ -207,3 +214,27 @@ router.get("/", function (req, res) {
 });
 
 module.exports = router;
+=======
+router.post('/users/getUserIDByEmail', async (req, res) => {
+    const { email } = req.body;
+
+    db.query('SELECT user_id FROM user WHERE email = ?', [email], (error, results) => {
+        if (error) {
+            console.error('Error fetching user ID:', error);
+            res.status(500).json({ error: 'Internal server error' });
+            return;
+        }
+
+        if (results.length > 0) {
+            res.json({ userID: results[0].user_id });
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    });
+});
+
+router.get('/abc', getABC);
+router.get('/', getHomePage);
+
+module.exports = router; 
+>>>>>>> origin/thanhnew
