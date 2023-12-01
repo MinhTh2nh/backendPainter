@@ -133,7 +133,6 @@ const deleteImageById = async (req,res) => {
   });
 }
 
-
 module.exports = {
   addImage,
   getAllImages,
