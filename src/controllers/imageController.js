@@ -46,9 +46,7 @@ const getImagesByUserEmail = async (req, res) => {
   const values = [email];
   db.query(sql, values, (err, result) => {
     if (err) {
-      return res
-        .status(500)
-        .json({ Error: "Error fetching images by email" });
+      return res.status(500).json({ Error: "Error fetching images by email" });
     }
     return res.status(200).json({ Status: "Success", images: result });
   });
@@ -81,7 +79,8 @@ const updateImage = async (req, res) => {
     const imageID = req.params.imageID;
     const { image_data } = req.body;
 
-    const sql = "UPDATE image SET image_data = ? , dateImage = NOW() WHERE imageID = ?";
+    const sql =
+      "UPDATE image SET image_data = ? , dateImage = NOW() WHERE imageID = ?";
     const values = [image_data, imageID];
 
     db.query(sql, values, (err, result) => {
@@ -104,7 +103,6 @@ const updateImage = async (req, res) => {
   }
 };
 
-
 //5. get image by imageID
 const getImagesByImageId = async (req, res) => {
   const imageID = req.params.imageID; // Assuming imageID is in the URL parameters
@@ -120,6 +118,18 @@ const getImagesByImageId = async (req, res) => {
   });
 };
 
+//6. delete image by imageID
+const deleteImageById = async (req, res) => {
+  const imageID = req.params.imageID;
+  const sql = "DELETE FROM image WHERE imageID =?";
+  const values = [imageID];
+  db.query(sql, values, (err, result) => {
+    res.json({
+      status: "success",
+      message: `Successfully delete id of ${imageID}!`,
+    });
+  });
+};
 
 module.exports = {
   addImage,
@@ -129,4 +139,5 @@ module.exports = {
   deleteAllImages,
   upload, // Assuming multerConfig is the Multer configuration
   getImagesByImageId,
+  deleteImageById,
 };
