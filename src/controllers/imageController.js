@@ -120,6 +120,18 @@ const getImagesByImageId = async (req, res) => {
   });
 };
 
+//6. delete image by imageID
+const deleteImageById = async (req,res) => {
+  const imageID = req.params.imageID;
+  const sql = "DELETE FROM image WHERE imageID =?";
+  const values = [imageID];
+  db.query(sql,values,(err,result)=>{
+    res.json({
+      status:"success",
+      message: `Successfully delete id of ${imageID}!`,
+    });
+  });
+}
 
 module.exports = {
   addImage,
@@ -129,4 +141,5 @@ module.exports = {
   deleteAllImages,
   upload, // Assuming multerConfig is the Multer configuration
   getImagesByImageId,
+  deleteImageById,
 };
