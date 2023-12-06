@@ -1,9 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const jwt = require('jsonwebtoken');
-
 const cors = require("cors");
-
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
 const cookieParser = require("cookie-parser")
@@ -12,7 +10,6 @@ const configViewEngine = require("./config/viewEngine");
 const authRoutes = require("./routes/auth");
 const webRoutes = require("./routes/web");
 const imgRoutes = require("./routes/imageManager");
-
 const db = require("./config/database");
 
 const app = express();
