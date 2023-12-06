@@ -14,6 +14,9 @@ router.delete("/deleteAllImages", imageController.deleteAllImages);
 router.get("/getImage/:imageID", imageController.getImagesByImageId);
 router.put("/editImage/:imageID", imageController.updateImage);
 router.delete("/delete/:imageID",imageController.deleteImageById);
+router.delete("/deleteAllImageByUserID/:user_id",imageController.deleteAllImageByUserID);
+
+router.get("/getImagesOfUser/:user_id", imageController.getImagesOfUser);
 
 
 // router.get('/userimages/:user_id', imageController.getImagesByUserId);
