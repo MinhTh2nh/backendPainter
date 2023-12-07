@@ -1,26 +1,5 @@
 const db = require('../config/database')
 
-const getHomePage = (req, res) => {
-    //Process data
-    //Call Model
-    let users = [];
-    db.query("SELECT * FROM user", (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: "Database error" });
-        }
-        users = results;
-        console.log(">>>>>results homepage= ", results);
-
-        // console.log(">>>>>check users= ", users);
-        res.send(JSON.stringify(users))
-        // return res.status(200).json(results);
-    });
-}
-
-const getABC = (req, res) => {
-    res.send("Check ABC")
-}
-
 const getUser = (req, res) => {
     db.query("SELECT * FROM user", (err, results) => {
         if (err) {
@@ -64,8 +43,6 @@ const createUser = (req, res) => {
 }
 
 module.exports = {
-    getHomePage,
-    getABC,
     createUser,
     getUser
 };

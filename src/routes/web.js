@@ -3,11 +3,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/database");
 
-const {
-    getHomePage,
-    getABC,
-    getUser
-} = require('../controllers/homeController')
 
 /**
  * @swagger
@@ -15,7 +10,7 @@ const {
  *   get:
  *     summary: Retrieve a list of users.
  *     description: Retrieve a list of users from the database.
- *     tags: [user]
+ *     tags: [User]
  *     responses:
  *       200:
  *         description: A list of users.
@@ -62,7 +57,7 @@ router.get('/users', (req, res) => {
  *           type: integer
  *         required: true
  *         description: The user ID.
- *     tags: [user]
+ *     tags: [User]
  *     responses:
  *       200:
  *         description: A single user.
@@ -120,7 +115,7 @@ router.get('/users/:user_id', (req, res) => {
  *                 type: string
  *                 description: The user's email.
  *                 example: updated_email@gmail.com
- *     tags: [user]
+ *     tags: [User]
  *     responses:
  *       200:
  *         description: User updated successfully.
@@ -156,7 +151,7 @@ router.put('/users/:user_id', (req, res) => {
  *           type: integer
  *         required: true
  *         description: The user ID.
- *     tags: [user]
+ *     tags: [User]
  *     responses:
  *       200:
  *         description: User deleted successfully.
@@ -175,7 +170,39 @@ router.delete('/users/:user_id', (req, res) => {
         res.json({ message: "User deleted successfully" });
     });
 });
-
+/**
+ * @swagger
+ * /users/getUserIDByEmail:
+ *   post:
+ *     summary: Get user ID by email.
+ *     requestBody:
+ *       description: User email.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email.
+ *                 example: minhthanh123@gmail.com
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: User ID retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userID:
+ *                   type: integer
+ *                   description: The user ID.
+ *                   example: 0
+ *       404:
+ *         description: User not found.
+ */
 router.post('/users/getUserIDByEmail', async (req, res) => {
     const { email } = req.body;
 
@@ -193,8 +220,5 @@ router.post('/users/getUserIDByEmail', async (req, res) => {
         }
     });
 });
-
-router.get('/abc', getABC);
-router.get('/', getHomePage);
 
 module.exports = router; 
